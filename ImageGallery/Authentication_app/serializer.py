@@ -37,3 +37,57 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         user.save()
         return validated_data
+    
+# class ForgetPasswordSerializer(serializers.ModelSerializer):
+     
+#     class Meta:
+#         model = CustomUser
+#         fields = ['email', 'password']
+    
+#     def validate(self,data):
+        
+#          if data:
+#             email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+#             password_pattern = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$'
+            
+            
+#             if not re.match(email_pattern,data['email']):
+#                 raise serializers.ValidationError("Enter a valid email address.")
+#             elif not re.match(password_pattern,data['password']):
+#                 raise serializers.ValidationError("Password must be at least 8 characters long, contain at least one uppercase letter, one digit, and one special character.")
+            
+#             return data
+#     def update_password(self,validated_data):
+        
+#         try:
+#            user = CustomUser.objects.get(email=validated_data['email'])
+#            user.password=validated_data['password']
+#            user.save()
+#            return validated_data
+#         except CustomUser.DoesNotExist:
+#                 raise serializers.ValidationError("User with this email does not exist.")
+
+class ForgetPasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'password']
+
+    def validate(self, data):
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        password_pattern = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$'
+        
+        # Validate email format
+        if not re.match(email_pattern, data['email']):
+            raise serializers.ValidationError("Enter a valid email address.")
+        
+        # Validate password format
+        if not re.match(password_pattern, data['password']):
+            raise serializers.ValidationError("Password must be at least 8 characters long, contain at least one uppercase letter, one digit, and one special character.")
+        
+        return data
+
+    def update(self, instance, validated_data):
+            # Use set_password to hash the password
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance

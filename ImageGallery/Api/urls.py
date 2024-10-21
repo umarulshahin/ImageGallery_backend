@@ -7,5 +7,9 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('token/',MyTokenobtainedPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/',TokenRefreshView.as_view(), name='token_refresh'),
-    path('signup/',SignUp,name='signup')
+    path('signup/',SignUp,name='signup'),
+    path('forgetPassword/',Forget_password,name='forgetPassword'),
+    path('otp_validation/',OTP_validation,name='otp_validation'),
+    path('newpassword/',NewPassword,name='newpassword')
+    
 ]
