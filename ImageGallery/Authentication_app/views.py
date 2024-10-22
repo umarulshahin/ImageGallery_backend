@@ -115,6 +115,7 @@ def OTP_validation(request):
 
 @api_view(['PATCH'])    
 def NewPassword(request):
+    
     data = request.data
     print(data, 'data')
 
