@@ -8,4 +8,5 @@ class Images(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     image = models.ImageField(upload_to='img/')
     descriptions = models.TextField(blank=False,null=False)
+    order = models.IntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now)

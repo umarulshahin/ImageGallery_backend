@@ -26,9 +26,7 @@ def Image_Upload(request):
             description = descriptions.get(description_key)
 
             if file and description and user.id:
-                print(f"file:{file}",)
-                print(f"Description: {description}")
-                print('userid',user.id)
+              
                 data={
                         'user': user.id,
                         'image':file,
@@ -62,3 +60,28 @@ def Get_Image(request):
       return Response(serializer.data)
     except Exception as e:
         return Response({'error': str(e)})
+    
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def Image_Order(request):
+    data= request.data
+    user = request.user
+    serializer = ImageOrderSerializer(data=data,many=True)
+   
+    if serializer.is_valid():
+        try:
+            for item in serializer.validated_data:
+                try: 
+                    image = Images.objects.get(id=item['id'], user=user)
+                except Images.DoesNotExist:
+                    return Response({'error': f'Image with id {item["id"]} does not exist or does not belong to the user'}, status=404)
+
+                # Update the order and save the image
+                image.order = item['order']
+                image.save()
+        except Exception as e:
+            
+            return Response({'error': f'Image with id {item["id"]} does not exist or does not belong to the user'}, status=404)
+        
+        return Response({'success': 'Images updated successfully'})
+    return Response({'error': serializer.errors})

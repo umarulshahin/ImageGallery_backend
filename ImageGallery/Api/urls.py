@@ -13,7 +13,8 @@ urlpatterns = [
     path('otp_validation/',OTP_validation,name='otp_validation'),
     path('newpassword/',NewPassword,name='newpassword'),
     path('image_upload/',Image_Upload,name='image_upload'),
-    path('getimage/',Get_Image,name='getimage')
+    path('getimage/',Get_Image,name='getimage'),
+    path('imageorder/',Image_Order,name='imageorder')
     
     
 ]
