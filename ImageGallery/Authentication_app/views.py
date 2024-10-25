@@ -91,33 +91,11 @@ def OTP_validation(request):
     except Exception as e:
         
         return Response({'error':e},status=status.HTTP_400_BAD_REQUEST)
-    
-# @api_view(['POST'])    
-# def NewPassword(request):
-    
-#     data = request.data
-#     print(data,'data')
-#     try:
-#         formdata={
-#                 'email': data.get('email'),
-#                 'password':data.get('password')
-#             }
-#         if not formdata:
-#            return Response("email and password is required")
-        
-#         serializer=ForgetPasswordSerializer(data=formdata)
-#         if serializer.is_valid():
-#             serializer.update_password(serializer.validated_data)  # Call your custom method here
-#             return Response({'message': 'Password updated successfully'})
-#         return Response({'error':serializer.errors})
-#     except Exception as e:
-#         return Response({'error':e},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])    
 def NewPassword(request):
     
     data = request.data
-    print(data, 'data')
 
     try:
         formdata = {

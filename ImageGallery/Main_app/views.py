@@ -85,3 +85,20 @@ def Image_Order(request):
         
         return Response({'success': 'Images updated successfully'})
     return Response({'error': serializer.errors})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def Delete_Image(request):
+    
+    print('yes call coming')
+    print(request.data,'data')
+    print(request.user,'user')
+    try:
+       image = Images.objects.filter(id=request.data,user=request.user)
+       image.delete()
+       return Response("successfully deleted",status=status.HTTP_200_OK)
+   
+    except Exception as e:
+        
+       return Response({'error': str(e)},status=status.HTTP_400_BAD_REQUEST)
