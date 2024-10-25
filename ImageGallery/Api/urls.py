@@ -15,7 +15,8 @@ urlpatterns = [
     path('image_upload/',Image_Upload,name='image_upload'),
     path('getimage/',Get_Image,name='getimage'),
     path('imageorder/',Image_Order,name='imageorder'),
-    path('deleteimage/',Delete_Image,name='deleteimage')
+    path('deleteimage/',Delete_Image,name='deleteimage'),
+    path('updateimage/',Update_Image,name='updateimage'),
     
     
 ]

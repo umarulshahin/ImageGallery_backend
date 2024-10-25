@@ -20,6 +20,7 @@ def Image_Upload(request):
         
         if not descriptions:
             return Response({'error': 'No descriptions provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
         alldata=[]
         for key, file in files.items():
             description_key = key.replace('[file]', '[description]')
@@ -36,8 +37,8 @@ def Image_Upload(request):
                     alldata.append(data)
                         
                 else:
-                    return Response({'error': f'Missing file or description for {key}'}, status=400)
-        print(alldata,'alldata')
+                    return Response({'error': f'Missing file or description for {key}'}, status=status.HTTP_400_BAD_REQUEST)
+                
         serializer = ImageSerializer(data=alldata,many=True)
         if serializer.is_valid():
             serializer.save()
@@ -76,7 +77,6 @@ def Image_Order(request):
                 except Images.DoesNotExist:
                     return Response({'error': f'Image with id {item["id"]} does not exist or does not belong to the user'}, status=404)
 
-                # Update the order and save the image
                 image.order = item['order']
                 image.save()
         except Exception as e:
@@ -102,3 +102,37 @@ def Delete_Image(request):
     except Exception as e:
         
        return Response({'error': str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def Update_Image(request):
+    
+    data = request.data
+    user = request.user
+    print(data,'data') 
+       
+    if not data:
+        return Response({'Required file is missing'},status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        image_id = int(data.get('id'))
+        if not image_id:
+            return Response({'error': 'Image ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        image = Images.objects.filter(id=image_id, user=user).first()
+        
+        if not image:
+            return Response({"error": "Image does not exist or you do not have permission to update this image"}, status=status.HTTP_404_NOT_FOUND)
+            
+        serializer = ImageSerializer(image, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("successfully update",status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(str(e))
+        return Response({'error': str(e)})
+    
+    
